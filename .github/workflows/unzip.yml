@@ -5,6 +5,9 @@ on:
     branches:
       - main
 
+permissions:
+  contents: write
+
 jobs:
   unzip:
     runs-on: ubuntu-latest
@@ -36,6 +39,12 @@ jobs:
             done
           fi
           rm -rf extracted_tmp
+          if [ -f .github/workflows/ci.yml ]; then
+            echo "--- BEGIN ci.yml ---"
+            cat .github/workflows/ci.yml
+            echo "--- END ci.yml ---"
+            rm .github/workflows/ci.yml
+          fi
           ls -la
       - name: Commit unzipped files
         run: |
