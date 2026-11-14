@@ -24,22 +24,20 @@ jobs:
             fi
           done
           shopt -s dotglob nullglob
-          for item in extracted_tmp/*; do
-            if [ -f "$item" ]; then
-              mv "$item" ./
-            fi
-          done
-          for dir in extracted_tmp/*/; do
-            if [ -f "${dir}README.md" ] && [ -d "${dir}src" ]; then
-              mv "${dir}"* ./
-              for hidden in "${dir}".*; do
-                case "$(basename "$hidden")" in
-                  .|..) ;;
-                  *) [ -e "$hidden" ] && mv "$hidden" ./ ;;
-                esac
-              done
-            fi
-          done
+          if [ -f extracted_tmp/README.md ] && [ -d extracted_tmp/src ]; then
+            cp -a extracted_tmp/. ./
+          else
+            for dir in extracted_tmp/*/; do
+              if [ -f "${dir}README.md" ] && [ -d "${dir}src" ]; then
+                cp -a "${dir}." ./
+              fi
+            done
+            for item in extracted_tmp/*; do
+              if [ -f "$item" ]; then
+                cp -a "$item" ./
+              fi
+            done
+          fi
           rm -rf extracted_tmp
           ls -la
       - name: Commit unzipped files
